@@ -4,10 +4,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/saikojosh/Ultimail.git"
+    "url": "https://github.com/saikojosh/Config-Ninja.git"
   },
   "bugs": {
-    "url": "https://github.com/saikojosh/Ultimail/issues"
+    "url": "https://github.com/saikojosh/Config-Ninja/issues"
   },
   "name": "config-ninja",
   "version": "0.0.1",
