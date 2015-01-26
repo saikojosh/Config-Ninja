@@ -1,0 +1,35 @@
+{
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saikojosh/Ultimail.git"
+  },
+  "bugs": {
+    "url": "https://github.com/saikojosh/Ultimail/issues"
+  },
+  "name": "config-ninja",
+  "version": "0.0.1",
+  "description": "Environmental JSON config.",
+  "keywords": [
+    "config",
+    "configure",
+    "cfg",
+    "json",
+    "environment",
+    "env"
+  ],
+  "main": "configNinja.js",
+  "author": "Josh Cole <saikojosh@gmail.com> (http://www.JoshuaCole.me)",
+  "contributors": [
+    {
+      "name": "Josh Cole",
+      "email": "saikojosh@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "object-assign-deep": "0.0.x"
+  },
+  "license": "MIT"
+}
