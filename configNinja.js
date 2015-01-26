@@ -11,6 +11,12 @@ var objectAssignDeep = require('object-assign-deep');
  */
 ME.init = function (dir, env) {
 
+  // If no dir is specified assume we are reloading.
+  if (!dir) {
+    dir = ME._cfgPath;
+    if (typeof env === 'undefined') { env = ME._env; }
+  }
+
   var prodCfg  = require(path.join(dir, 'production.config.json'));
   var defaults = {};
   var envCfg;
@@ -29,6 +35,7 @@ ME.init = function (dir, env) {
   // Set an 'env' property on the config but allow it to be overridden by any config file.
   defaults = {
     _env:     env,
+    _cfgPath: dir
   };
 
   // Merge the configs together
