@@ -44,3 +44,6 @@ Simply call `config.init()` again without any parameters. **Warning:** If any of
 
 #### How can I change the enviroment of my config during runtime?
 Call `config.init(null, 'new-environment-string');` This will reload the config with the new environment.
+
+#### Can I load config from a database?
+No. That's beyond the scope of this module.
