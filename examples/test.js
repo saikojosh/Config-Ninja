@@ -10,3 +10,4 @@ var config = require('../configNinja');
 
 // Use our config.
 console.dir(config);
+console.log('Super:', config.nested.super);
