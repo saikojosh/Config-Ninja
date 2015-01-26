@@ -28,7 +28,7 @@ ME.init = function (dir, env) {
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
   defaults = {
-    env: env
+    _env:     env,
   };
 
   // Merge the configs together
