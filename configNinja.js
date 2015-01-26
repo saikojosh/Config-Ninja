@@ -44,4 +44,7 @@ ME.init = function (dir, env) {
   // Copy the configs onto the 'config-ninja' object.
   objectAssignDeep(ME, merged);
 
+  // Allow immediate use of 'config'.
+  return ME;
+
 };
