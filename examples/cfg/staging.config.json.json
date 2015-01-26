@@ -1,3 +1,7 @@
 {
-  "name": "josh"
+  "location": "United Kingdom",
+  "name": "Bob",
+  "nested": {
+    "super": 999
+  }
 }

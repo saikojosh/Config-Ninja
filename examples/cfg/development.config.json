@@ -1,0 +1,7 @@
+{
+  "prop2": "Universe",
+  "name": "Josh",
+  "nested": {
+    "bool": false
+  }
+}
