@@ -42,7 +42,7 @@ ME.init = function (dir, env) {
   merged = extender.merge(defaults, prodCfg, envCfg);
 
   // Copy the configs onto the 'config-ninja' object.
-  extender.extend(true, ME, merged);
+  ME = extender.extend(true, ME, merged);
 
   // Allow immediate use of 'config'.
   return ME;
