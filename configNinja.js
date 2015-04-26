@@ -2,9 +2,10 @@
  * Config Ninja.
  */
 
-var ME       = module.exports;
-var path     = require('path');
-var extender = require('object-extender');
+var ME               = module.exports;
+var path             = require('path');
+var extender         = require('object-extender');
+var objectAssignDeep = require('object-assign-deep');
 
 /*
  * Load and merge the config files.
@@ -42,7 +43,7 @@ ME.init = function (dir, env) {
   merged = extender.merge(defaults, prodCfg, envCfg);
 
   // Copy the configs onto the 'config-ninja' object.
-  ME = extender.extend(true, ME, merged);
+  objectAssignDeep(ME, merged);
 
   // Allow immediate use of 'config'.
   return ME;

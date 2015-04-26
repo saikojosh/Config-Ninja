@@ -29,6 +29,7 @@
     }
   ],
   "dependencies": {
+    "object-assign-deep": "0.0.x",
     "object-extender": "1.2.x"
   },
   "license": "MIT"
