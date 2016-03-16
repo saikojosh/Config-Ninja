@@ -23,6 +23,11 @@ var config = require('config-ninja').init('/path/to/cfg/dir/', 'staging');
 ```
 Where `env` is the name of your config file e.g. `staging.config.json`.
 
+## Specify Options
+You can also specify some options when instantiating Config-Ninja. All options are optional.
+
+* **configInFilename** `true` Set false if you want to your config filenames to be in the format of "development.json" instead of the default "development.config.json".
+
 ## Setup Config Files
 Typically you will need 2 config files, one for `production` and one for `development`. You may also want config files for other enviroments such as `staging`.
 
