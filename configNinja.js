@@ -19,7 +19,7 @@ ME.init = function (dir, env, _options) {
   // If no dir is specified assume we are reloading.
   if (!dir) {
     dir = ME._cfgPath;
-    if (typeof env === 'undefined') { env = ME._env; }
+    if (!env) { env = ME._env; }
   }
 
   const prodCfg  = require(path.join(dir, 'production.config.json'));
@@ -28,7 +28,7 @@ ME.init = function (dir, env, _options) {
   let merged;
 
   // Get the enviroment.
-  if (typeof env === 'undefined') { env = process.env.NODE_ENV || 'development'; }
+  if (!env) { env = process.env.NODE_ENV || 'development'; }
 
   // Load the environment config?
   if (env !== 'production') {
