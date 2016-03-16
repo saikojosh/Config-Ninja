@@ -2,10 +2,10 @@
  * Config Ninja.
  */
 
-var ME               = module.exports;
-var path             = require('path');
-var extender         = require('object-extender');
-var objectAssignDeep = require('object-assign-deep');
+const ME = module.exports;
+const path = require('path');
+const extender = require('object-extender');
+const objectAssignDeep = require('object-assign-deep');
 
 /*
  * Load and merge the config files.
@@ -18,15 +18,13 @@ ME.init = function (dir, env) {
     if (typeof env === 'undefined') { env = ME._env; }
   }
 
-  var prodCfg  = require(path.join(dir, 'production.config.json'));
-  var defaults = {};
-  var envCfg;
-  var merged;
+  const prodCfg  = require(path.join(dir, 'production.config.json'));
+  const defaults = {};
+  let envCfg;
+  let merged;
 
   // Get the enviroment.
-  if (typeof env === 'undefined') {
-    env = process.env.NODE_ENV || 'development';
-  }
+  if (typeof env === 'undefined') { env = process.env.NODE_ENV || 'development'; }
 
   // Load the environment config?
   if (env !== 'production') {
@@ -35,8 +33,8 @@ ME.init = function (dir, env) {
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
   defaults = {
-    _env:     env,
-    _cfgPath: dir
+    _env: env,
+    _cfgPath: dir,
   };
 
   // Merge the configs together.
