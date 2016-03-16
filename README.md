@@ -6,20 +6,20 @@ A quick and easy way to read in config files from disk depending on the envirome
 ## Quick Start
 ```javascript
 // On application load prepare the ninja.
-var config = require('config-ninja').init('/path/to/cfg/dir/');
+const config = require('config-ninja').init('/path/to/cfg/dir/');
 
 // In another module we need config again...
-var config = require('config-ninja');
+const config = require('config-ninja');
 
 // Use our config.
 console.dir(config);
-console.log('Super:', config.nested.super);
+console.log('Super:', config.nested.super);  // See examples.
 ```
 
 ## Override Environment
 By default `production` and `development` environment strings are understood. If you have additional environments you can override the environment string by passing in a second parameter `env`:
 ```javascript
-var config = require('config-ninja').init('/path/to/cfg/dir/', 'staging');
+const config = require('config-ninja').init('/path/to/cfg/dir/', 'staging');
 ```
 Where `env` is the name of your config file e.g. `staging.config.json`.
 
