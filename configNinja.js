@@ -10,7 +10,11 @@ const objectAssignDeep = require('object-assign-deep');
 /*
  * Load and merge the config files.
  */
-ME.init = function (dir, env) {
+ME.init = function (dir, env, _options) {
+
+  const options = extender.defaults({
+    configInFilename: true,
+  }, _options);
 
   // If no dir is specified assume we are reloading.
   if (!dir) {
@@ -28,7 +32,8 @@ ME.init = function (dir, env) {
 
   // Load the environment config?
   if (env !== 'production') {
-    envCfg  = require(path.join(dir, env + '.config.json'));
+    let filename = `${env}${options.configInFilename ? '.config' : ''}.json`;
+    envCfg  = require(path.join(dir, filename));
   }
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
