@@ -3,15 +3,17 @@
  */
 
 const ME = module.exports;
+const fs = require('fs');
 const path = require('path');
 const extender = require('object-extender');
 const objectAssignDeep = require('object-assign-deep');
 
 /*
- * Load and merge the config files.
+ * Load and merge the config files synchronously.
  */
 ME.init = function (dir, env, _options) {
 
+  // Default options.
   const options = extender.defaults({
     configInFilename: true,
   }, _options);
@@ -22,7 +24,8 @@ ME.init = function (dir, env, _options) {
     if (!env) { env = ME._env; }
   }
 
-  const prodCfg  = require(path.join(dir, 'production.config.json'));
+  const prodFilename = path.join(dir, 'production${options.configInFilename ? '.config' : ''}.json');
+  const prodCfg  = fs.readFileSync(prodFilename);
   const defaults = {};
   let envCfg;
   let merged;
@@ -32,8 +35,8 @@ ME.init = function (dir, env, _options) {
 
   // Load the environment config?
   if (env !== 'production') {
-    let filename = `${env}${options.configInFilename ? '.config' : ''}.json`;
-    envCfg  = require(path.join(dir, filename));
+    let envFilename = path.join(dir, `${env}${options.configInFilename ? '.config' : ''}.json`);
+    envCfg  = fs.readFileSync(envFilename);
   }
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
