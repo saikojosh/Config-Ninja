@@ -3,7 +3,7 @@
   "prop2": "World",
   "nested": {
     "bool": true,
-    "super": 123,
+    "number": 123,
     "still": "here!"
   }
 }

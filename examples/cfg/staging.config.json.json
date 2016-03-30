@@ -2,6 +2,6 @@
   "location": "United Kingdom",
   "name": "Bob",
   "nested": {
-    "super": 999
+    "number": 999
   }
 }

@@ -1,13 +1,15 @@
+'use strict';
+
 /*
- * An example for using Config Ninja.
+ * An example for using Config-Ninja.
  */
 
-// On application load prepare the ninja.
-var config = require('../configNinja').init(__dirname + '/cfg');
+// Prepare the ninja on application load.
+const config = require('../configNinja').init(__dirname + '/cfg');
 
 // In another module we need config again...
-var config = require('../configNinja');
+const config = require('../configNinja');
 
 // Use our config.
 console.dir(config);
-console.log('Super:', config.nested.super);
+console.log('Super:', config.nested.number);
