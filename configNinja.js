@@ -11,6 +11,41 @@ const extender = require('object-extender');
 const objectAssignDeep = require('object-assign-deep');
 
 /*
+ * Loads in a config file and converts it to a JSON string ready for parsing, whilst handling errors.
+ */
+const readConfigFile = function (type, name, dir, configInFilename) {
+
+  const filename = path.join(dir, `${name}${configInFilename ? '.config' : ''}.json`);
+  let cfg;
+
+  try {
+    cfg = fs.readFileSync(filename).toString();
+  } catch (err) {
+    throw new Error(`Unable to read ${type} config "${name}" (${err.code}).`);
+  }
+
+  return cfg;
+
+};
+
+/*
+ * Takes a JSON string and returns a nicely formatted config object, whilst handling errors.
+ */
+const parseConfigJSON = function (type, name, input) {
+
+  let output;
+
+  try {
+    output = JSON.parse(input);
+  } catch (err) {
+    throw new Error(`The ${type} config "${name}" is invalid (${err.name}).`);
+  }
+
+  return output;
+
+}
+
+/*
  * Load and merge the config files synchronously.
  */
 ME.init = function (dir, env, _options) {
@@ -27,19 +62,22 @@ ME.init = function (dir, env, _options) {
     if (!env) { env = ME._env; }
   }
 
-  const prodFilename = path.join(dir, `production${options.configInFilename ? '.config' : ''}.json`);
-  const prodCfg  = JSON.parse(fs.readFileSync(prodFilename).toString());
+  // Which environment are we operating in?
+  if (!env) { env = process.env.NODE_ENV || 'development'; }
+
   const configList = [];
+  let prodCfg;
   let envCfg;
   let merged;
 
-  // Get the enviroment.
-  if (!env) { env = process.env.NODE_ENV || 'development'; }
+  // Prepare the production config.
+  prodCfg = readConfigFile('production', 'production', dir, options.configInFilename);
+  prodCfg = parseConfigJSON('production', 'production', prodCfg);
 
   // Load the environment config?
   if (env !== 'production') {
-    let envFilename = path.join(dir, `${env}${options.configInFilename ? '.config' : ''}.json`);
-    envCfg  = JSON.parse(fs.readFileSync(envFilename).toString());
+    envCfg = readConfigFile('environment', env, dir, options.configInFilename);
+    envCfg = parseConfigJSON('environment', env, envCfg);
   }
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
@@ -56,19 +94,13 @@ ME.init = function (dir, env, _options) {
 
     for (var a = 0, alen = options.additionalMergeFiles.length; a < alen; a++) {
       const additionalMergeFile = options.additionalMergeFiles[a];
-      const additionalFilename = path.join(dir, `${additionalMergeFile}${options.configInFilename ? '.config' : ''}.json`);
-      let additionalCfg;
+      let addCfg;
 
-      // Read in the additional file, skipping it if it doesn't exist.
-      try {
-        additionalCfg = JSON.parse(fs.readFileSync(additionalFilename).toString());
-      } catch (err) {
-        if (err.code === 'ENOENT') { continue; }
-        throw err;
-      }
+      addCfg = readConfigFile('additional', additionalMergeFile, dir, options.configInFilename);
+      addCfg = parseConfigJSON('additional', additionalMergeFile, addCfg);
 
-      // Prepare the additional config ready for merging.
-      configList.push(additionalCfg);
+      // Store the additional config ready for merging.
+      configList.push(addCfg);
     }
 
   }
