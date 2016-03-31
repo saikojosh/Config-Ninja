@@ -13,7 +13,7 @@ const objectAssignDeep = require('object-assign-deep');
 /*
  * Loads in a config file and converts it to a JSON string ready for parsing, whilst handling errors.
  */
-const readConfigFile = function (type, name, dir, configInFilename) {
+const readConfigFile = function (type, name, dir, configInFilename, ignoreMissing) {
 
   const filename = path.join(dir, `${name}${configInFilename ? '.config' : ''}.json`);
   let cfg;
@@ -21,7 +21,9 @@ const readConfigFile = function (type, name, dir, configInFilename) {
   try {
     cfg = fs.readFileSync(filename).toString();
   } catch (err) {
-    throw new Error(`Unable to read ${type} config "${name}" (${err.code}).`);
+    if (!ignoreMissing) {
+      throw new Error(`Unable to read ${type} config "${name}" (${err.code}).`);
+    }
   }
 
   return cfg;
@@ -54,6 +56,7 @@ ME.init = function (dir, env, _options) {
   let options = extender.defaults({
     configInFilename: true,
     additionalMergeFiles: [],
+    ignoreMissingAdditional: true,
   }, _options);
 
   // If no dir is specified assume we are reloading.
@@ -98,7 +101,7 @@ ME.init = function (dir, env, _options) {
       const additionalMergeFile = options.additionalMergeFiles[a];
       let addCfg;
 
-      addCfg = readConfigFile('additional', additionalMergeFile, dir, options.configInFilename);
+      addCfg = readConfigFile('additional', additionalMergeFile, dir, options.configInFilename, options.ignoreMissingAdditional);
       addCfg = parseConfigJSON('additional', additionalMergeFile, addCfg);
 
       // Store the additional config ready for merging.
