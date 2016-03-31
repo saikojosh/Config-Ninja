@@ -45,10 +45,11 @@ You can also specify some options when instantiating Config-Ninja. All options a
 const config = require('config-ninja').init('/path/to/cfg/dir/', 'development', { ... });
 ```
 
-| Property               | Default | Description |
-|------------------------|---------|-------------|
-| configInFilename       | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
-| additionalMergeFiles[] |         | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
+| Property                | Default | Description |
+|-------------------------|---------|-------------|
+| configInFilename        | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| additionalMergeFiles[]  |         | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
+| ignoreMissingAdditional | true   | By default we don't throw an error if an additional config file is missing. |
 
 ## Reserved Property Names
 All these property names are reserved by Config-Ninja and cannot be used in your config files:
