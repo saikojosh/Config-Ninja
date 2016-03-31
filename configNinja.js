@@ -51,7 +51,7 @@ const parseConfigJSON = function (type, name, input) {
 ME.init = function (dir, env, _options) {
 
   // Default options.
-  const options = extender.defaults({
+  let options = extender.defaults({
     configInFilename: true,
     additionalMergeFiles: [],
   }, _options);
@@ -60,6 +60,7 @@ ME.init = function (dir, env, _options) {
   if (!dir) {
     dir = ME._cfgPath;
     if (!env) { env = ME._env; }
+    if (!_options) { options = ME._options; }
   }
 
   // Which environment are we operating in?
@@ -84,6 +85,7 @@ ME.init = function (dir, env, _options) {
   const defaults = {
     _env: env,
     _cfgPath: dir,
+    _options: options,
   };
 
   // Prepare the list of config objects.
