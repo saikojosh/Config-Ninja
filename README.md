@@ -45,9 +45,10 @@ You can also specify some options when instantiating Config-Ninja. All options a
 const config = require('config-ninja').init('/path/to/cfg/dir/', 'development', { ... });
 ```
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| configInFilename | true | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| Property               | Default | Description |
+|------------------------|---------|-------------|
+| configInFilename       | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| additionalMergeFiles[] |         | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
 
 ## Reserved Property Names
 All these property names are reserved by Config-Ninja and cannot be used in your config files:
@@ -55,17 +56,21 @@ All these property names are reserved by Config-Ninja and cannot be used in your
 * init
 * \_env
 * \_cfgPath
+* \_options
 
 ## FAQ
 
 #### How can I tell the environment my config was initialised with?
-The environment string for a given config variable is stored under `config._env`. **Warning:** If any of your config files contain a property called `_env` this will overwrite `config._env`.
+The environment string for a given config variable is stored under `config._env`, so you can simply do `if (config._env === 'production') { ... }`. **Warning:** If any of your config files contain a property called `_env` this will not work.
 
 #### How can I reload my config?
 Simply call `config.init()` again without any parameters and your config files will be read from disk. **Warning:** Your config files must not contain any of the reserved property names in order for this to work.
 
 #### How can I change the environment of my config during runtime?
-Call `config.init(null, 'new-environment-string');` This will reload the config with the new environment.
+Call `config.init(null, 'new-environment-string');` This will reload the config with the new environment set.
+
+#### How can I change the additioan merge files of my config during runtime?
+Call `config.init(null, null, { additionalMergeFiles: [ ... ] });` This will reload the config with your new additional merge files.
 
 #### Can I load config from a database?
 No. That's beyond the scope of this module.
