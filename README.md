@@ -17,8 +17,10 @@ const config = require('config-ninja');
 
 // Use our config.
 console.dir(config);
-console.log('Super:', config.nested.number);  // See examples.
+console.log('Nested Number:', config.nested.number);  // See examples.
 ```
+
+See `example.js` for a working example.
 
 ## Setup Config Files
 You will need at least 2 config files, one for `production` and one for `development`. You may also want config files for other environments such as `staging`. You can have as many files as you need.
