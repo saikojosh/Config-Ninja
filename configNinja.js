@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Config Ninja.
  */
@@ -24,9 +26,9 @@ ME.init = function (dir, env, _options) {
     if (!env) { env = ME._env; }
   }
 
-  const prodFilename = path.join(dir, 'production${options.configInFilename ? '.config' : ''}.json');
-  const prodCfg  = fs.readFileSync(prodFilename);
-  const defaults = {};
+  const prodFilename = path.join(dir, `production${options.configInFilename ? '.config' : ''}.json`);
+  const prodCfg  = JSON.parse(fs.readFileSync(prodFilename).toString());
+  const configList = [];
   let envCfg;
   let merged;
 
@@ -36,17 +38,17 @@ ME.init = function (dir, env, _options) {
   // Load the environment config?
   if (env !== 'production') {
     let envFilename = path.join(dir, `${env}${options.configInFilename ? '.config' : ''}.json`);
-    envCfg  = fs.readFileSync(envFilename);
+    envCfg  = JSON.parse(fs.readFileSync(envFilename).toString());
   }
 
   // Set an 'env' property on the config but allow it to be overridden by any config file.
-  defaults = {
+  const defaults = {
     _env: env,
     _cfgPath: dir,
   };
 
   // Merge the configs together.
-  merged = extender.merge(defaults, prodCfg, envCfg);
+  merged = extender.merge.apply(extender, configList);
 
   // Copy the configs onto the 'config-ninja' object.
   objectAssignDeep(ME, merged);
