@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * Config Ninja.
+ * CONFIG-NINJA
  */
 
 const ME = module.exports;
@@ -80,7 +80,7 @@ ME.init = function (dir, env, _options) {
     envCfg = parseConfigJSON('environment', env, envCfg);
   }
 
-  // Set an 'env' property on the config but allow it to be overridden by any config file.
+  // Add in our internal properties.
   const defaults = {
     _env: env,
     _cfgPath: dir,
