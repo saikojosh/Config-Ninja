@@ -18,6 +18,7 @@ ME.init = function (dir, env, _options) {
   // Default options.
   const options = extender.defaults({
     configInFilename: true,
+    additionalMergeFiles: [],
   }, _options);
 
   // If no dir is specified assume we are reloading.
@@ -46,6 +47,31 @@ ME.init = function (dir, env, _options) {
     _env: env,
     _cfgPath: dir,
   };
+
+  // Prepare the list of config objects.
+  configList.push(defaults, prodCfg, envCfg);
+
+  // Do we have any additional files to merge in?
+  if (options.additionalMergeFiles && options.additionalMergeFiles.length) {
+
+    for (var a = 0, alen = options.additionalMergeFiles.length; a < alen; a++) {
+      const additionalMergeFile = options.additionalMergeFiles[a];
+      const additionalFilename = path.join(dir, `${additionalMergeFile}${options.configInFilename ? '.config' : ''}.json`);
+      let additionalCfg;
+
+      // Read in the additional file, skipping it if it doesn't exist.
+      try {
+        additionalCfg = JSON.parse(fs.readFileSync(additionalFilename).toString());
+      } catch (err) {
+        if (err.code === 'ENOENT') { continue; }
+        throw err;
+      }
+
+      // Prepare the additional config ready for merging.
+      configList.push(additionalCfg);
+    }
+
+  }
 
   // Merge the configs together.
   merged = extender.merge.apply(extender, configList);
