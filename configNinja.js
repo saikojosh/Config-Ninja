@@ -26,7 +26,7 @@ const readConfigFile = function (type, name, dir, configInFilename, ignoreMissin
     }
   }
 
-  return cfg;
+  return cfg || null;
 
 };
 
@@ -101,7 +101,11 @@ ME.init = function (dir, env, _options) {
       const additionalMergeFile = options.additionalMergeFiles[a];
       let addCfg;
 
+      // Attempt to load in the config file.
       addCfg = readConfigFile('additional', additionalMergeFile, dir, options.configInFilename, options.ignoreMissingAdditional);
+      if (!addCfg) { continue; }
+
+      // JSONify.
       addCfg = parseConfigJSON('additional', additionalMergeFile, addCfg);
 
       // Store the additional config ready for merging.
