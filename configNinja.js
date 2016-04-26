@@ -22,7 +22,7 @@ const readConfigFile = function (type, name, dir, configInFilename, ignoreMissin
     cfg = fs.readFileSync(filename).toString();
   } catch (err) {
     if (!ignoreMissing) {
-      throw new Error(`Unable to read ${type} config "${name}" (${err.code}).`);
+      throw new Error(`Unable to read ${type} config "${name}" (${err.code}) from path "${filename}".`);
     }
   }
 
@@ -40,7 +40,7 @@ const parseConfigJSON = function (type, name, input) {
   try {
     output = JSON.parse(input);
   } catch (err) {
-    throw new Error(`The ${type} config "${name}" is invalid (${err.name}).`);
+    throw new Error(`The ${type} config "${name}" is not valid JSON (${err.name}).`);
   }
 
   return output;
