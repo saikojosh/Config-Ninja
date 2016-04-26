@@ -7,6 +7,7 @@
 const ME = module.exports;
 const fs = require('fs');
 const path = require('path');
+const clc = require('cli-color');
 const extender = require('object-extender');
 const objectAssignDeep = require('object-assign-deep');
 
@@ -22,7 +23,7 @@ const readConfigFile = function (type, name, dir, configInFilename, ignoreMissin
     cfg = fs.readFileSync(filename).toString();
   } catch (err) {
     if (!ignoreMissing) {
-      throw new Error(`Unable to read ${type} config "${name}" (${err.code}) from path "${filename}".`);
+      throw new Error(clc.redBright(`Unable to read ${type} config "${name}" (${err.code}) from path "${filename}".`));
     }
   }
 
@@ -40,7 +41,7 @@ const parseConfigJSON = function (type, name, input) {
   try {
     output = JSON.parse(input);
   } catch (err) {
-    throw new Error(`The ${type} config "${name}" is not valid JSON (${err.name}).`);
+    throw new Error(clc.redBright(`The ${type} config "${name}" is not valid JSON (${err.name}).`));
   }
 
   return output;

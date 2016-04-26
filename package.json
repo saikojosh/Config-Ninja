@@ -32,6 +32,7 @@
     }
   ],
   "dependencies": {
+    "cli-color": "1.1.x",
     "object-assign-deep": "0.0.x",
     "object-extender": "1.2.x"
   },
