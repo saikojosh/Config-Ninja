@@ -47,6 +47,11 @@ You can also specify some options when instantiating Config-Ninja. All options a
 const config = require('config-ninja').init('/path/to/cfg/dir/', 'development', { ... });
 ```
 
+```javascript
+// Pass in null as the second parameter to default to the NODE_ENV variable.
+const config = require('config-ninja').init('/path/to/cfg/dir/', null, { ... });
+```
+
 | Property                | Default | Description |
 |-------------------------|---------|-------------|
 | configInFilename        | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
@@ -72,7 +77,7 @@ Simply call `config.init()` again without any parameters and your config files w
 #### How can I change the environment of my config during runtime?
 Call `config.init(null, 'new-environment-string');` This will reload the config with the new environment set.
 
-#### How can I change the additioan merge files of my config during runtime?
+#### How can I change the additional merge files of my config during runtime?
 Call `config.init(null, null, { additionalMergeFiles: [ ... ] });` This will reload the config with your new additional merge files.
 
 #### Can I load config from a database?
