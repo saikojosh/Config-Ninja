@@ -15,7 +15,7 @@ const objectAssignDeep = require('object-assign-deep');
  */
 const readConfigFile = function (type, name, dir, configInFilename, ignoreMissing) {
 
-  const filename = path.join(dir, `${name}${configInFilename ? '.config' : ''}.json`);
+  const filename = path.join(process.cwd(), dir, `${name}${configInFilename ? '.config' : ''}.json`);
   let cfg;
 
   try {
