@@ -61,9 +61,10 @@ const config = require('config-ninja').init('/path/to/cfg/dir/', null, { ... });
 ## Get a Different Config
 To return a copy of a different config (perhaps for temporary use) call the `get` method. Config-Ninja must have been initialised somewhere before you do this.
 ```javascript
-const config = require('config-ninja').init('/path/to/cfg/dir/', 'development');
+const config = require('config-ninja').init('/path/to/cfg/dir/', 'production');
 
-const useConfig = config.get('staging');
+const useConfig = config.get('staging');  // Returns a prepared copy of the staging config.
+const useConfig = config.get('development', true);  // Pass true as the 2nd param to return just the raw file as JSON.
 ```
 
 ## Reserved Property Names
