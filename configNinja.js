@@ -133,7 +133,7 @@ ME.init = function (dir, env, _options) {
 /*
  * Returns a temporary copy of the given config.
  */
-ME.get = function (useEnv) {
+ME.get = function (useEnv, raw) {
 
   // Must initialise the config first.
   if (!ME._env) { throw new Error('Config has not been initialised yet.'); }
@@ -141,6 +141,16 @@ ME.get = function (useEnv) {
   let useOptions = extender.defaults(ME._options, {
     returnCopy: true,
   });
+
+  // Return just a single file without merging it.
+  if (raw) {
+    let rawCfg;
+
+    // Prepare the config.
+    rawCfg = readConfigFile('raw', env, useOptions,dir, useOptions.configInFilename);
+    rawCfg = parseConfigJSON('raw', env, rawCfg);
+    return rawCfg;
+  }
 
   // Return a copy of the given config.
   return ME.init(ME._cfgPath, useEnv, useOptions);
