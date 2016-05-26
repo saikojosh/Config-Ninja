@@ -58,10 +58,19 @@ const config = require('config-ninja').init('/path/to/cfg/dir/', null, { ... });
 | additionalMergeFiles[]  |         | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
 | ignoreMissingAdditional | true   | By default we don't throw an error if an additional config file is missing. |
 
+## Get a Different Config
+To return a copy of a different config (perhaps for temporary use) call the `get` method. Config-Ninja must have been initialised somewhere before you do this.
+```javascript
+const config = require('config-ninja').init('/path/to/cfg/dir/', 'development');
+
+const useConfig = config.get('staging');
+```
+
 ## Reserved Property Names
-All these property names are reserved by Config-Ninja and cannot be used in your config files:
+All these property names are reserved by Config-Ninja and cannot be used in the root of your config files. You can however use them as sub properties.
 
 * init
+* get
 * \_env
 * \_cfgPath
 * \_options
