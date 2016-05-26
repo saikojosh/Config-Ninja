@@ -58,6 +58,7 @@ ME.init = function (dir, env, _options) {
     configInFilename: true,
     additionalMergeFiles: [],
     ignoreMissingAdditional: true,
+    returnCopy: false,
   }, _options);
 
   // If no dir is specified assume we are reloading.
@@ -118,10 +119,30 @@ ME.init = function (dir, env, _options) {
   // Merge the configs together.
   merged = extender.merge.apply(extender, configList);
 
+  // Drop out here if we just need to return a copy of the config.
+  if (options.returnCopy) { return merged; }
+
   // Copy the configs onto the 'config-ninja' object.
   objectAssignDeep(ME, merged);
 
   // Allow immediate use of 'config'.
   return ME;
+
+};
+
+/*
+ * Returns a temporary copy of the given config.
+ */
+ME.get = function (useEnv) {
+
+  // Must initialise the config first.
+  if (!ME._env) { throw new Error('Config has not been initialised yet.'); }
+
+  let useOptions = extender.defaults(ME._options, {
+    returnCopy: true,
+  });
+
+  // Return a copy of the given config.
+  return ME.init(ME._cfgPath, useEnv, useOptions);
 
 };
