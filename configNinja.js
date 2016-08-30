@@ -16,10 +16,10 @@ const objectAssignDeep = require('object-assign-deep');
  */
 const readConfigFile = function (type, name, dir, absolutePath, configInFilename, ignoreMissing) {
 
-  let filename = path.join(process.cwd(), dir, `${name}${configInFilename ? '.config' : ''}.json`);
+  let filename = path.join(dir, `${name}${configInFilename ? '.config' : ''}.json`);
   let cfg;
 
-  // By default we need to turn the filename into an absolute path.
+  // If the user is not passing in an absolute path to the config then we use the current working directory.
   if (!absolutePath) { filename = path.join(process.cwd(), filename); }
 
   try {
