@@ -14,10 +14,13 @@ const objectAssignDeep = require('object-assign-deep');
 /*
  * Loads in a config file and converts it to a JSON string ready for parsing, whilst handling errors.
  */
-const readConfigFile = function (type, name, dir, configInFilename, ignoreMissing) {
+const readConfigFile = function (type, name, dir, absolutePath, configInFilename, ignoreMissing) {
 
-  const filename = path.join(process.cwd(), dir, `${name}${configInFilename ? '.config' : ''}.json`);
+  let filename = path.join(process.cwd(), dir, `${name}${configInFilename ? '.config' : ''}.json`);
   let cfg;
+
+  // By default we need to turn the filename into an absolute path.
+  if (!absolutePath) { filename = path.join(process.cwd(), filename); }
 
   try {
     cfg = fs.readFileSync(filename).toString();
@@ -58,6 +61,7 @@ ME.init = function (dir, env, _options) {
     configInFilename: true,
     additionalMergeFiles: [],
     ignoreMissingAdditional: true,
+    absolutePath: false,
     returnCopy: false,
   }, _options);
 
@@ -77,12 +81,12 @@ ME.init = function (dir, env, _options) {
   let merged;
 
   // Prepare the production config.
-  prodCfg = readConfigFile('production', 'production', dir, options.configInFilename);
+  prodCfg = readConfigFile('production', 'production', dir, options.absolutePath, options.configInFilename);
   prodCfg = parseConfigJSON('production', 'production', prodCfg);
 
   // Load the environment config?
   if (env !== 'production') {
-    envCfg = readConfigFile('environment', env, dir, options.configInFilename);
+    envCfg = readConfigFile('environment', env, dir, options.absolutePath, options.configInFilename);
     envCfg = parseConfigJSON('environment', env, envCfg);
   }
 
@@ -104,7 +108,7 @@ ME.init = function (dir, env, _options) {
       let addCfg;
 
       // Attempt to load in the config file.
-      addCfg = readConfigFile('additional', additionalMergeFile, dir, options.configInFilename, options.ignoreMissingAdditional);
+      addCfg = readConfigFile('additional', additionalMergeFile, dir, options.absolutePath, options.configInFilename, options.ignoreMissingAdditional);
       if (!addCfg) { continue; }
 
       // JSONify.
@@ -147,7 +151,7 @@ ME.get = function (useEnv, raw) {
     let rawCfg;
 
     // Prepare the config.
-    rawCfg = readConfigFile('raw', env, useOptions,dir, useOptions.configInFilename);
+    rawCfg = readConfigFile('raw', env, useOptions, dir, useOptions.absolutePath, useOptions.configInFilename);
     rawCfg = parseConfigJSON('raw', env, rawCfg);
     return rawCfg;
   }
