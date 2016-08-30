@@ -55,8 +55,9 @@ const config = require('config-ninja').init('/path/to/cfg/dir/', null, { ... });
 | Property                | Default | Description |
 |-------------------------|---------|-------------|
 | configInFilename        | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
-| additionalMergeFiles[]  |         | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
+| additionalMergeFiles[]  | []      | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
 | ignoreMissingAdditional | true   | By default we don't throw an error if an additional config file is missing. |
+| absolutePath            | false  | Set true if passing in an absolute directory path to `.init()`. |
 
 ## Get a Different Config
 To return a copy of a different config (perhaps for temporary use) call the `get` method. Config-Ninja must have been initialised somewhere before you do this.
