@@ -59,6 +59,7 @@ ME.init = function (dir, env, _options) {
   // Default options.
   let options = extender.defaults({
     configInFilename: true,
+    setEnvProperty: { 'production': 1, 'staging': 2, 'development': 3 },
     additionalMergeFiles: [],
     ignoreMissingAdditional: true,
     absolutePath: false,
@@ -122,6 +123,15 @@ ME.init = function (dir, env, _options) {
 
   // Merge the configs together.
   merged = extender.merge.apply(extender, configList);
+
+  // Add the env properties?
+  if (options.setEnvProperty && !merged.env) {
+    const environmentLevels = (typeof options.setEnvProperty === 'object' ? options.setEnvProperty : null);
+    merged.env = {
+      id: env,
+      level: (environmentLevels && typeof environmentLevels[env] !== 'undefined' ? environmentLevels[env] : null),
+    };
+  }
 
   // Drop out here if we just need to return a copy of the config.
   if (options.returnCopy) { return merged; }
