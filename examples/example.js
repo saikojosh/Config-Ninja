@@ -8,6 +8,7 @@
 // Prepare the ninja on application load.
 const configInModuleA = require('../configNinja').init(__dirname + '/cfg', null, {
   additionalMergeFiles: ['local'],
+  absolutePath: true,
 });
 
 // In another module we need config again...
