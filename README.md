@@ -52,9 +52,10 @@ const config = require('config-ninja').init('/path/to/cfg/dir/', 'development', 
 const config = require('config-ninja').init('/path/to/cfg/dir/', null, { ... });
 ```
 
-| Property                | Default | Description |
+| Option                  | Default | Description |
 |-------------------------|---------|-------------|
-| configInFilename        | true    | Set false if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| configInFilename        | true    | Set false if you want to your config  filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| setEnvProperty          | `{'production': 1, 'staging': 2, 'development': 3 }` | If the property `env` is not already specified in your config files this option will set `env.id` to the environment string e.g. "production", and will set `env.level` to the corresponding integer specified in this option. |
 | additionalMergeFiles[]  | []      | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored. Properties in additional files will overwrite properties with the same name in your config. |
 | ignoreMissingAdditional | true   | By default we don't throw an error if an additional config file is missing. |
 | absolutePath            | false  | Set true if passing in an absolute directory path to `.init()`. |
@@ -79,17 +80,43 @@ All these property names are reserved by Config-Ninja and cannot be used in the 
 
 ## FAQ
 
-#### How can I tell the environment my config was initialised with?
+#### How can I tell which environment string my config was initialised with?
 The environment string for a given config variable is stored under `config._env`, so you can simply do `if (config._env === 'production') { ... }`. **Warning:** If any of your config files contain a property called `_env` this will not work.
 
-#### How can I reload my config?
+#### How can I reload my config from disk?
 Simply call `config.init()` again without any parameters and your config files will be read from disk. **Warning:** Your config files must not contain any of the reserved property names in order for this to work.
 
-#### How can I change the environment of my config during runtime?
+#### How can I change the environment of my config after initialisation?
 Call `config.init(null, 'new-environment-string');` This will reload the config with the new environment set.
 
-#### How can I change the additional merge files of my config during runtime?
-Call `config.init(null, null, { additionalMergeFiles: [ ... ] });` This will reload the config with your new additional merge files.
+#### How can I load in additional config files from disk after initialisation?
+Call `config.init(null, null, { additionalMergeFiles: [ ... ] });` This will reload the config with the extra config files merged in.
+
+#### How can I create a code branch that executes on multiple environments?
+See the `setEnvProperty` initilisation option. If your config files don't include a property called `env` then Config-Ninja will add in a property with this shape:
+```javascript
+{
+  id: "production",
+  level: 1,
+}
+
+// OR
+{
+  id: "staging",
+  level: 2,
+}
+
+// OR
+{
+  id: "development",
+  level: 3,
+}
+```
+You can use this to create code branches that only execute if the environment is above a certain "level". For example, the following branch will execute if the environment level is higher than 1. By default this will be either the "staging" or "development" environments.
+
+ ```javascript
+ if (config.env.level > 1) { ... }
+ ```
 
 #### Can I load config from a database?
 No. That's beyond the scope of this module.
