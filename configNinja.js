@@ -69,7 +69,7 @@ ME.init = function (dir, env, _options) {
   if (!dir) {
     dir = ME._cfgPath;
     if (!env) { env = ME._env; }
-    options = extender.default(ME._options, _options);
+    options = extender.defaults(ME._options, _options);
   }
 
   // Which environment are we operating in?
