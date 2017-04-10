@@ -3,24 +3,27 @@ A quick and easy way to read in config files from disk depending on the environm
 
 Once your config has been initialised Config-Ninja allows you to `const config = require('config-ninja');` in any of your modules and get access to your config object.
 
-**Important:** The `production` config is always the default config. If you specify another environment, Config Ninja will copy the properties from that environment into the production config, overwriting any values that already exist. Nested properties will be respected. No changes are saved to disk.
+**Important:** The `production` config is always the default config. If you specify another environment such as `staging` or `development`, Config Ninja will deep merge the properties from that environment into the production config, overwriting any values that already exist. You can nest properties as deeply as you like. No changes are persisted to disk.
 
 ## Quick Start
-Create a directory to hold your config files and create a `production.config.json` file which will contain all your configuration. Then create a `development.config.json` file which will hold config _specific_ to your development environment. Then in your `index.js`:
+Create a directory to hold your config files and create a `production.config.json` file which will contain all your configuration. Then create a `development.config.json` file which will hold only the _specific_ values that need to be different in your development environment. Then in your application entry point, e.g. `index.js`:
 
 ```javascript
 // Prepare the ninja on application load.
 const config = require('config-ninja').init('/path/to/cfg/dir/');
+```
 
-// In another module we need config again...
+To load the config in other modules:
+```javascript
+// Load in the config again, taking advantage of Node's module caching.
 const config = require('config-ninja');
 
-// Use our config.
+// Use the config!
 console.dir(config);
 console.log('Nested Number:', config.nested.number);  // See examples.
 ```
 
-See `example.js` for a working example.
+See `example.js` for a working example which you can run with `node ./examples/example`.
 
 ## Setup Config Files
 You will need at least 2 config files, one for `production` and one for `development`. You may also want config files for other environments such as `staging`. You can have as many files as you need.
