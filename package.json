@@ -32,9 +32,8 @@
     }
   ],
   "dependencies": {
-    "cli-color": "1.1.x",
-    "object-assign-deep": "0.0.x",
-    "object-extender": "1.2.x"
+    "cli-color": "^1.2.0",
+    "object-extender": "^2.0.1"
   },
   "license": "MIT"
 }

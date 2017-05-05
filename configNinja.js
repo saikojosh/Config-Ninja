@@ -9,7 +9,6 @@ const fs = require('fs');
 const path = require('path');
 const clc = require('cli-color');
 const extender = require('object-extender');
-const objectAssignDeep = require('object-assign-deep');
 
 /*
  * Loads in a config file and converts it to a JSON string ready for parsing, whilst handling errors.
@@ -122,7 +121,7 @@ ME.init = function (dir, env, _options) {
   }
 
   // Merge the configs together.
-  merged = extender.merge.apply(extender, configList);
+  merged = extender.merge(...configList);
 
   // Add the env properties?
   if (options.setEnvProperty && !merged.env) {
@@ -137,7 +136,7 @@ ME.init = function (dir, env, _options) {
   if (options.returnCopy) { return merged; }
 
   // Copy the configs onto the 'config-ninja' object.
-  objectAssignDeep(ME, merged);
+  extender.mergeInto(ME, merged);
 
   // Allow immediate use of 'config'.
   return ME;
