@@ -15,13 +15,18 @@
   "keywords": [
     "config",
     "configure",
+    "configuration",
     "cfg",
     "json",
     "environment",
+    "environmental",
     "env",
+    "variable",
     "development",
     "staging",
-    "production"
+    "production",
+    "local",
+    "file"
   ],
   "main": "configNinja.js",
   "author": "Josh Cole <saikojosh@gmail.com> (http://www.JoshuaCole.me)",
