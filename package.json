@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "cli-color": "^1.2.0",
-    "object-extender": "^2.0.1"
+    "object-extender": "^2.0.3"
   },
   "license": "MIT"
 }

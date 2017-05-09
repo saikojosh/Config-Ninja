@@ -88,15 +88,15 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-object-assign-deep@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/object-assign-deep/-/object-assign-deep-0.2.0.tgz#92eddc8e71fac45a5fdccdab221dcbe26c882c6d"
+object-assign-deep@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/object-assign-deep/-/object-assign-deep-0.3.1.tgz#b57b7572d9a328d6448a3f4b6c0fffc8b10c61a2"
 
-object-extender@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/object-extender/-/object-extender-2.0.2.tgz#0346d2615a5000ad7486fdc6a3bc498096a5b091"
+object-extender@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/object-extender/-/object-extender-2.0.3.tgz#56e20960ed0a453cc26f94610acf6584dbbc05a4"
   dependencies:
-    object-assign-deep "^0.2.0"
+    object-assign-deep "^0.3.1"
 
 timers-ext@0.1:
   version "0.1.2"
