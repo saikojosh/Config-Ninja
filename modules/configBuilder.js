@@ -37,7 +37,8 @@ module.exports = class ConfigBuilder {
 			environmentLevels: { production: 1, staging: 2, development: 3 },
 			localConfig: [`local`],
 			requireLocalConfig: false,
-			immutable: false,
+			immutable: false,  // <- Not used in this class but listed here for completeness.
+			plain: false,  // <- Not used in this class but listed here for completeness.
 		};
 
 		// Set the builder's configuration.

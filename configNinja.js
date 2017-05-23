@@ -9,6 +9,18 @@ const extender = require(`object-extender`);
 const ConfigBuilder = require(`./modules/configBuilder`);
 const ConfigError = require(`./modules/configError`);
 
+const utilityFunctions = {
+	'__inspect': __inspect,
+	'__reload': __reload,
+	'__switch': __switch,
+	'__addLocal': __addLocal,
+	'__get': __get,
+	'__raw': __raw,
+	'__plain': __plain,
+	'__trace': __trace,
+};
+const utilityFunctionNames = Object.keys(utilityFunctions);
+
 const configCache = {};
 
 /*
@@ -83,6 +95,13 @@ function __raw (object, env) {
 	if (!object.raw[env]) { throw new ConfigError(`There is no config loaded called "${env}".`); }
 
 	return extender.clone(object.raw[env]);
+}
+
+/*
+ * Returns a copy of the config properties without any of the utility functions added in.
+ */
+function __plain (object) {
+	return use(object.configId, object.options.immutable, true);
 }
 
 /*
@@ -204,7 +223,7 @@ function prepareConfig (configId, dir, env, options, returnOnly = false) {
 /*
  * Returns a copy of the config in memory.
  */
-function use (configId, immutable = false) {
+function use (configId, _immutable = false, _plain = false) {
 
 	// Ensure the config was previously initialised.
 	if (!configCache[configId]) {
@@ -213,16 +232,32 @@ function use (configId, immutable = false) {
 
 	// Create a copy to make the config immutable if the immutable option is truthy.
 	const object = configCache[configId];
+	const immutable = object.options.immutable || _immutable || false;
+	const plain = object.options.plain || _plain || false;
 	const config = (immutable ? extender.clone(object.values) : object.values);
 
-	// Add some utility functions to the config.
-	config.__inspect = __inspect.bind(null, object);
-	config.__reload = __reload.bind(null, object);
-	config.__switch = __switch.bind(null, object);
-	config.__addLocal = __addLocal.bind(null, object);
-	config.__get = __get.bind(null, object);
-	config.__raw = __raw.bind(null, object);
-	config.__trace = __trace.bind(null, object);
+	// Plain objects should not have any of the utility functions attached.
+	if (plain) {
+
+		for (const key in config) {
+			if (config.hasOwnProperty(key)) {
+				if (utilityFunctionNames.includes(key)) { delete config[key]; }
+			}
+		}
+
+	}
+
+	// Otherwise we add the utility functions to the config.
+	else {
+
+		for (const key in utilityFunctions) {
+			if (utilityFunctions.hasOwnProperty(key)) {
+				const func = utilityFunctions[key];
+				config[key] = func.bind(null, object);
+			}
+		}
+
+	}
 
 	return config;
 
