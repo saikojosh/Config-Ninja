@@ -1,7 +1,4 @@
 {
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/saikojosh/Config-Ninja.git"
@@ -40,5 +37,8 @@
     "cli-color": "^1.2.0",
     "object-extender": "^2.0.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  }
 }
