@@ -3,5 +3,5 @@
   "name": "Bob",
   "nested": {
     "number": 999
-  }
+  }, "new": 111
 }
