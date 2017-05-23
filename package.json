@@ -7,7 +7,7 @@
     "url": "https://github.com/saikojosh/Config-Ninja/issues"
   },
   "name": "config-ninja",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "Environmental JSON config.",
   "keywords": [
     "config",
