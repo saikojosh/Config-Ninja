@@ -25,7 +25,17 @@ console.log('Nested Number:', config.nested.number);  // See examples.
 
 **Example:** See `example.js` for a working example which you can run with `node ./examples/example`.
 
-## Setup your Config Files
+### Config ID
+The config id you set needs to be unique for your application or module because of the way Node caches modules in memory. It's possible that your module and another dependency will be using the same instance of Config-Ninja.
+
+If that happens and there is a collision of config ids an error will be thrown. One way to avoid this could be to use some information from your `package.json` to set the config id like this:
+
+```javascript
+const packageJson = require(`./package.json`);
+const config = require(`config-ninja`).init(`${packageJson.name}-${packageJson.version}`);
+```
+
+### Setup your Config Files
 You will need at least 2 config files, one for `production` and one for `development`. You may also want config files for other environments such as `staging`. You can have as many files as you need.
 
 ```
@@ -36,7 +46,7 @@ You will need at least 2 config files, one for `production` and one for `develop
   /custom.config.json
 ```
 
-## Local Config
+### Local Config
 You may also wish to add local config files that are not committed to your repo but must be present on every developer's machine e.g. `local.config.json`. Use the ignore rules for your VCS (e.g. `.gitignore`) to ignore the local files and prevent them from being committed.
 
 By default we assume you might have a local file called `local.config.json`. You can change this by passing in an array of names in the `localConfig` option. If you want to throw an error if any of the specified local config files are missing then set the `requireLocalConfig` option to true.
@@ -49,7 +59,7 @@ const config = require('config-ninja').init('my-config', {
 });
 ```
 
-## Override the Config Directory
+### Override the Config Directory
 By default we assume the config files are located in `current working directory + '/config'`. You can change this by passing in an absolute or relative path as the second parameter:
 
 ```javascript
@@ -59,7 +69,7 @@ const config = require('config-ninja').init('my-config', {
 });
 ```
 
-## Override the Environment
+### Override the Environment
 By default `production` and `development` environment strings are understood. If you have additional environments you can override the environment string by passing in a third parameter called `env`, which matches the name of your config file (e.g. `staging.config.json`):
 
 ```javascript
@@ -70,7 +80,7 @@ const config = require('config-ninja').init('my-config', {
 });
 ```
 
-## Specify Extra Options
+### Specify Extra Options
 You can also specify some options when instantiating Config-Ninja. All options are optional and must be passed as a hash as the last parameter:
 
 ```javascript
@@ -80,7 +90,7 @@ const config = require('config-ninja').init('my-config', { ... });
 
 See the API Overview below for the options you can specify.
 
-## Reserved Property Names
+### Reserved Property Names
 Properties in the top level of your config that begin with two underscores (i.e. `__reload`) are reserved names and should not be used as config properties.
 
 ## API Overview
