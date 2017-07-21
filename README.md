@@ -115,6 +115,7 @@ You can specify the following options. You can either pass `dir` and `env` into 
 | environmentLevels       | `{ production: 1, staging: 2, development: 3 }` | If the property `env` is not already specified in your config files this option will set `env.id` to the environment string (e.g. "production"), and will set `env.level` to the corresponding integer specified in this option. Pass in a falsy value to disable this feature. |
 | localConfig[]           | `['local']` | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored by default. Properties in local files will overwrite properties with the same name in your config. |
 | requireLocalConfig      | false       | By default we don't throw an error if a local config file is missing. Set true to throw an error instead. |
+| single                  |             | Set to a string e.g. "my-settings" if you only want to load a single config file e.g. "my-settings.config.json". |
 | immutable               | false       | Set true to force the config objects to always be immutable. |
 | plain                   | false       | Set true to always construct the config without any of the utility functions attached. |
 
