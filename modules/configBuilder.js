@@ -37,6 +37,7 @@ module.exports = class ConfigBuilder {
 			environmentLevels: { production: 1, staging: 2, development: 3 },
 			localConfig: [`local`],
 			requireLocalConfig: false,
+			single: null,
 			immutable: false,  // <- Not used in this class but listed here for completeness.
 			plain: false,  // <- Not used in this class but listed here for completeness.
 		};
@@ -67,16 +68,32 @@ module.exports = class ConfigBuilder {
 	loadFiles () {
 
 		const mergeList = [];
-		const files = [{ type: `production`, filename: `production` }];
+		const files = [];
 
-		// Add the environent config if it isn't the production config.
-		if (this.options.env !== `production`) {
-			files.push({ type: this.options.env, filename: this.options.env });
+		// Single config mode.
+		if (this.options.single) {
+
+			// Load just one config file.
+			files.push({ type: `single`, filename: this.options.single });
+
 		}
 
-		// Add the additional local files to the files list, if any.
-		if (Array.isArray(this.options.localConfig)) {
-			this.options.localConfig.forEach(filename => files.push({ type: `local`, filename }));
+		// Multiple config mode.
+		else {
+
+			// Add the production config first.
+			files.push({ type: `production`, filename: `production` });
+
+			// Then add the environent's config, if it isn't also the production config.
+			if (this.options.env !== `production`) {
+				files.push({ type: this.options.env, filename: this.options.env });
+			}
+
+			// Add the additional local files to the files list, if any.
+			if (Array.isArray(this.options.localConfig)) {
+				this.options.localConfig.forEach(filename => files.push({ type: `local`, filename }));
+			}
+
 		}
 
 		// Parse each config file in order.

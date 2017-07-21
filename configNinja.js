@@ -180,7 +180,7 @@ function prepareConfig (configId, dir, env, options, returnOnly = false) {
 	// Just returns the config values without storing the config.
 	if (returnOnly) { return extender.clone(builder.getValues()); }
 
-	// The config has previously been loaded and we the immutable option is not set.
+	// The config has previously been loaded and the immutable option is not set.
 	if (configCache[configId] && !options.immutable) {
 
 		// Remove all old properties from the config values so it's empty without destroying the values object itself.
