@@ -91,9 +91,31 @@ module.exports = class ConfigBuilder {
 		for (const envVarName of this.options.environmentVariables.mapping) {
 			if (envVarName === `NODE_ENV`) { continue; }
 			const configPath = this.options.environmentVariables.mapping[envVarName];
-			const envVarValue = process.env[envVarName];
+			const envVarValue = this.parseEnvironmentValue(process.env[envVarName]);
 			deepProperty.set(this.configValues, configPath, envVarValue);
 		}
+
+	}
+
+	/*
+	 * Converts string representations of true, null, false, integers and floats to their correct data types.
+	 */
+	parseEnvironmentValue (inputStr) {
+
+		// We can only parse strings!
+		if (typeof inputStr !== `string`) { return inputStr; }
+
+		switch (inputStr.toLowerCase()) {
+			case `true`: return true;
+			case `null`: return null; // eslint-disable-line node/no-unsupported-features/es-syntax
+			case `false`: return false;
+			default:
+				if (inputStr.match(/^\d+(?:\.\d+)?$/)) { return parseFloat(inputStr); }
+				break;
+		}
+
+		// Nothing to do so return the value as-is.
+		return inputStr;
 
 	}
 
