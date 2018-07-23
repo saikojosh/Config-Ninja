@@ -62,7 +62,7 @@ function __switch (object, env) {
  */
 function __addLocal (object, _localConfig) {
 
-	const localConfig = (typeof _localConfig === `string` ? [_localConfig] : _localConfig);
+	const localConfig = (typeof _localConfig === `string` ? [ _localConfig ] : _localConfig);
 
 	if (!Array.isArray(localConfig)) { throw new ConfigError(`You must specify an array of local config files to add.`); }
 

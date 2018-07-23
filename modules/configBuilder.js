@@ -35,11 +35,11 @@ module.exports = class ConfigBuilder {
 			env: env || process.env.NODE_ENV || `development`,
 			shortFilenames: false,
 			environmentLevels: { production: 1, staging: 2, development: 3 },
-			localConfig: [`local`],
+			localConfig: [ `local` ],
 			requireLocalConfig: false,
 			single: null,
-			immutable: false,  // <- Not used in this class but listed here for completeness.
-			plain: false,  // <- Not used in this class but listed here for completeness.
+			immutable: false, // <- Not used in this class but listed here for completeness.
+			plain: false, // <- Not used in this class but listed here for completeness.
 		};
 
 		// Set the builder's configuration.
