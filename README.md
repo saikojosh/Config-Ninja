@@ -101,7 +101,9 @@ const config = require('config-ninja').init('my-config', {
 ### Environment Variables
 You can also load config from the environment variables, and optionally from a `.env` file (see config options below). You'll need to provide a mapping of environment variable names to paths in your config to use this feature. Environment variables overwrite values in your config files even if they are empty strings, but you can avoid this if don't set them at all in the environment.
 
-**Note:** The `NODE_ENV` environment variable cannot be loaded from a `.env` file and will be ignored.
+**Note:** String representations of `true`, `null` `false`, integers and floats will be converted to their correct data types.
+
+**Warning:** The `NODE_ENV` environment variable cannot be loaded from a `.env` file and will be ignored.
 
 **Example .env file:**
 
