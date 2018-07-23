@@ -2,6 +2,8 @@
 
 const fileSystem = require(`fs`);
 const path = require(`path`);
+const deepProperty = require(`deep-property`);
+const dotenv = require(`dotenv`);
 const extender = require(`object-extender`);
 const ConfigError = require(`./configError`);
 
@@ -37,6 +39,11 @@ module.exports = class ConfigBuilder {
 			environmentLevels: { production: 1, staging: 2, development: 3 },
 			localConfig: [ `local` ],
 			requireLocalConfig: false,
+			environmentVariables: {
+				enableDotenv: false,
+				dotenvPath: null, // <- Use default path chosen by 'dotenv' module.
+				mapping: {},
+			},
 			single: null,
 			immutable: false, // <- Not used in this class but listed here for completeness.
 			plain: false, // <- Not used in this class but listed here for completeness.
@@ -57,8 +64,36 @@ module.exports = class ConfigBuilder {
 			this.options.localConfig = Array.from(new Set(this.options.localConfig));
 		}
 
-		// (Re)-load all the config files.
+		// (Re)-load all the configuration.
 		this.loadFiles();
+		this.mapVariablesFromEnvironment();
+
+	}
+
+	/*
+	 * Loads in variables from the environment, and optionally a dotenv file.
+	 */
+	mapVariablesFromEnvironment () {
+
+		// Skip or continue?
+		if (!this.options.environmentVariables || !Object.keys(this.options.environmentVariables.mapping).length) {
+			return;
+		}
+
+		// Handle dotenv file.
+		if (this.options.environmentVariables.enableDotenv) {
+			const dotenvPath = this.options.environmentVariables.dotenvPath || void (0);
+			const dotenvResult = dotenv.config({ path: dotenvPath });
+			if (dotenvResult.error) { throw new ConfigError(dotenvResult.error); }
+		}
+
+		// Handle variable mappings.
+		for (const envVarName of this.options.environmentVariables.mapping) {
+			if (envVarName === `NODE_ENV`) { continue; }
+			const configPath = this.options.environmentVariables.mapping[envVarName];
+			const envVarValue = process.env[envVarName];
+			deepProperty.set(this.configValues, configPath, envVarValue);
+		}
 
 	}
 
