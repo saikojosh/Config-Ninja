@@ -1,9 +1,7 @@
 # Config-Ninja
-A quick and easy way to read in config files from disk depending on the environment. By default Config-Ninja uses the `NODE_ENV` environment variable to determine whether we are running in `production` mode, `staging`, or any other environment, otherwise `development` mode is assumed.
+A quick and easy way to load in config from disk or environment variables. Config-Ninja uses the `NODE_ENV` environment variable to determine whether your code is running in `production` mode, `staging`, or any other environment, otherwise `development` mode is assumed.
 
 Once your config has been initialised Config-Ninja allows you to `const config = require('config-ninja').use('my-config');` in any of your modules and get access to your config object.
-
-**Important:** The `production` config is always the default config. If you specify another environment such as `staging` or `development`, Config-Ninja will deep merge the properties from that environment into the production config, overwriting any values that already exist. You can nest properties as deeply as you like. No changes are persisted to disk.
 
 ## Quick Start
 Create a directory to hold your config files and create a `production.config.json` file which will contain all your configuration properties. Then create a `development.config.json` file which will hold only the _specific_ values that need to be different in your development environment. Then in your application entry point, e.g. `index.js`:
@@ -25,15 +23,10 @@ console.log('Nested Number:', config.nested.number);  // See examples.
 
 **Example:** See `example.js` for a working example which you can run with `node ./examples/example`.
 
-### Config ID
-The config id you set needs to be unique for your application or module because of the way Node caches modules in memory. It's possible that your module and another dependency will be using the same instance of Config-Ninja.
+## Important Notes
 
-If that happens and there is a collision of config ids an error will be thrown. One way to avoid this could be to use some information from your `package.json` to set the config id like this:
-
-```javascript
-const packageJson = require(`./package.json`);
-const config = require(`config-ninja`).init(`${packageJson.name}-${packageJson.version}`);
-```
+### Production Config
+The `production` config is _always_ the default config. If you specify another environment such as `staging` or `development`, Config-Ninja will deep merge the properties from that environment into the production config, overwriting any values that already exist. You can nest properties as deeply as you like. Your files are not modified.
 
 ### Setup your Config Files
 You will need at least 2 config files, one for `production` and one for `development`. You may also want config files for other environments such as `staging`. You can have as many files as you need.
@@ -45,6 +38,31 @@ You will need at least 2 config files, one for `production` and one for `develop
   /development.config.json
   /custom.config.json
 ```
+
+### Config ID
+The config id you set needs to be unique for your application or module because of the way Node caches modules in memory. It's possible that your module and another dependency will be using the same instance of Config-Ninja.
+
+If that happens and there is a collision of config ids an error will be thrown. One way to avoid this could be to use some information from your `package.json` to set the config id like this:
+
+```javascript
+const packageJson = require(`./package.json`);
+const config = require(`config-ninja`).init(`${packageJson.name}-${packageJson.version}-config`);
+```
+
+### Reserved Property Names
+Properties in the top level of your config that begin with two underscores (i.e. `__reload`) are reserved names and should not be used as config properties.
+
+## Advanced Usage
+
+### Specify Extra Options
+You can also specify some options when instantiating Config-Ninja. All options are optional and must be passed as a hash as the last parameter:
+
+```javascript
+const config = require('config-ninja').init('my-config', '/path/to/cfg/dir/', 'development', { ... });
+const config = require('config-ninja').init('my-config', { ... });
+```
+
+See the API Overview below for the options you can specify.
 
 ### Local Config
 You may also wish to add local config files that are not committed to your repo but must be present on every developer's machine e.g. `local.config.json`. Use the ignore rules for your VCS (e.g. `.gitignore`) to ignore the local files and prevent them from being committed.
@@ -80,18 +98,32 @@ const config = require('config-ninja').init('my-config', {
 });
 ```
 
-### Specify Extra Options
-You can also specify some options when instantiating Config-Ninja. All options are optional and must be passed as a hash as the last parameter:
+### Environment Variables
+You can also load config from the environment variables, and optionally from a `.env` file (see config options below). You'll need to provide a mapping of environment variable names to paths in your config to use this feature. Environment variables overwrite values in your config files even if they are empty strings, but you can avoid this if don't set them at all in the environment.
+
+**Note:** The `NODE_ENV` environment variable cannot be loaded from a `.env` file and will be ignored.
+
+**Example .env file:**
 
 ```javascript
-const config = require('config-ninja').init('my-config', '/path/to/cfg/dir/', 'development', { ... });
-const config = require('config-ninja').init('my-config', { ... });
+LOG_LEVEL=verbose
+NINJA_AWESOMENESS="very awesome"
+OFFSET=5
 ```
 
-See the API Overview below for the options you can specify.
+**Example mapping configuration:**
 
-### Reserved Property Names
-Properties in the top level of your config that begin with two underscores (i.e. `__reload`) are reserved names and should not be used as config properties.
+```javascript
+{
+  environmentVariables: {
+    mapping: {
+      LOG_LEVEL: `logLevel`,
+      NINJA_AWESOMENESS: `how.awesome.are.ninjas`,
+      OFFSET: `timezoneOffset`,
+    }
+  }
+}
+```
 
 ## API Overview
 
@@ -107,17 +139,20 @@ Sets up a new config object and returns it. Any of the following function signat
 
 You can specify the following options. You can either pass `dir` and `env` into the function as parameters, or add them as options, or rely on the default values.
 
-| Option                  | Default     | Description |
-|-------------------------|-------------|-------------|
-| dir                     | `./config`  | Set the directory where your config is stored. Relative paths are relative to the current working directory of your process. |
-| env                     | `process.env.NODE_ENV || 'development'` | Set the environment to a specific environment string (e.g. "production"), defaults to process.env.NODE_ENV or "development". |
-| shortFilenames          | false       | Set true if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
-| environmentLevels       | `{ production: 1, staging: 2, development: 3 }` | If the property `env` is not already specified in your config files this option will set `env.id` to the environment string (e.g. "production"), and will set `env.level` to the corresponding integer specified in this option. Pass in a falsy value to disable this feature. |
-| localConfig[]           | `['local']` | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored by default. Properties in local files will overwrite properties with the same name in your config. |
-| requireLocalConfig      | false       | By default we don't throw an error if a local config file is missing. Set true to throw an error instead. |
-| single                  |             | Set to a string e.g. "my-settings" if you only want to load a single config file e.g. "my-settings.config.json". |
-| immutable               | false       | Set true to force the config objects to always be immutable. |
-| plain                   | false       | Set true to always construct the config without any of the utility functions attached. |
+| Option                            | Default     | Description |
+|-----------------------------------|-------------|-------------|
+| dir                               | `./config`  | Set the directory where your config is stored. Relative paths are relative to the current working directory of your process. |
+| env                               | `process.env.NODE_ENV || 'development'` | Set the environment to a specific environment string (e.g. "production"), defaults to process.env.NODE_ENV or "development". |
+| shortFilenames                    | false       | Set true if you want to your config filenames to be in the format of `development.json` instead of the default `development.config.json`. |
+| environmentLevels                 | `{ production: 1, staging: 2, development: 3 }` | If the property `env` is not already specified in your config files this option will set `env.id` to the environment string (e.g. "production"), and will set `env.level` to the corresponding integer specified in this option. Pass in a falsy value to disable this feature. |
+| localConfig[]                     | `['local']` | Specify a list of other filenames to merge into your config, if the files don't exist they will just be ignored by default. Properties in local files will overwrite properties with the same name in your config. |
+| requireLocalConfig                | false       | By default we don't throw an error if a local config file is missing. Set true to throw an error instead. |
+| environmentVariables.enableDotenv | false       | Set `true` to load in files from a `.env` file. |
+| environmentVariables.dotenvPath   | false       | Optionally provide a custom absolute path to the `.env` file. |
+| environmentVariables.mapping      |             | Provide a mapping of environment variables to paths in your config file (see the Environment Variables section above). |
+| single                            |             | Set to a string e.g. "my-settings" if you only want to load a single config file e.g. "my-settings.config.json". |
+| immutable                         | false       | Set true to force the config objects to always be immutable. |
+| plain                             | false       | Set true to always construct the config without any of the utility functions attached. |
 
 ### .use(configId[, immutable[, plain]])
 Return an existing config object that has been initialised with `.init()`.
@@ -174,8 +209,8 @@ const inspection = config.__inspect();
 console.log(inspection.options.env);
 ```
 
-#### How can I reload my config from disk?
-Simply call `config.__reload()`. See the Config Overview above.
+#### How can I reload my config?
+Simply call `config.__reload()`. This will reload config files from disk and variables from the environment. See the Config Overview above.
 
 #### How can I change the environment of my config after initialisation?
 Call `config.__switch(env)`. This will reload the config with the new environment set. See the Config Overview above.
@@ -211,7 +246,7 @@ You can use this to create code branches that only execute if the environment is
  ```
 
 #### Can I load config files asynchronously?
-No. That's beyond the scope of this module. Config should be loaded when your application first boots, and then only sparingly. This will prevent it from getting in the way of your application's execution.
+No. That's beyond the scope of this module. Config should be loaded when your application first boots, and then only sparingly. This will prevent expensive IO from getting in the way of your application's execution.
 
 #### Can I load config from a database?
 No. That's beyond the scope of this module.
