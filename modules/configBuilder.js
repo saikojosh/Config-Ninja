@@ -91,9 +91,13 @@ module.exports = class ConfigBuilder {
 		for (const envVarName in this.options.environmentVariables.mapping) {
 			if (!this.options.environmentVariables.mapping.hasOwnProperty(envVarName)) { continue; }
 			if (envVarName === `NODE_ENV`) { continue; }
+
 			const configPath = this.options.environmentVariables.mapping[envVarName];
 			const envVarValue = this.parseEnvironmentValue(process.env[envVarName]);
-			deepProperty.set(this.configValues, configPath, envVarValue);
+
+			if (typeof envVarValue !== `undefined`) {
+				deepProperty.set(this.configValues, configPath, envVarValue);
+			}
 		}
 
 	}
