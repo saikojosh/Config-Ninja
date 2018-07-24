@@ -88,7 +88,8 @@ module.exports = class ConfigBuilder {
 		}
 
 		// Handle variable mappings.
-		for (const envVarName of this.options.environmentVariables.mapping) {
+		for (const envVarName in this.options.environmentVariables.mapping) {
+			if (!this.options.environmentVariables.mapping.hasOwnProperty(envVarName)) { continue; }
 			if (envVarName === `NODE_ENV`) { continue; }
 			const configPath = this.options.environmentVariables.mapping[envVarName];
 			const envVarValue = this.parseEnvironmentValue(process.env[envVarName]);
